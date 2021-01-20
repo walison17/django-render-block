@@ -92,7 +92,7 @@ def _build_block_context(template, context):
 
 
 def _find_template_block(template, block_name, context):
-    """Renders a single block from a template."""
+    """Finds a single block from a template."""
     return _find_template_block_nodelist(template.nodelist, block_name, context)
 
 
