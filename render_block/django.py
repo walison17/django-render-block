@@ -32,11 +32,11 @@ def django_render_block(template, block_name, context, request=None):
     template = template.template
     cache_key = _make_node_cache_key(template, block_name)
 
-    try:
-        node, render_context = _NODE_CACHE[cache_key]
-    except KeyError:
-        # Bind the template to the context.
-        with context_instance.bind_template(template):
+    # Bind the template to the context.
+    with context_instance.bind_template(template):
+        try:
+            node, render_context = _NODE_CACHE[cache_key]
+        except KeyError:
             # Before trying to render the template, we need to traverse the tree of
             # parent templates and find all blocks in them.
             parent_template = _build_block_context(template, context_instance)
@@ -54,7 +54,6 @@ def django_render_block(template, block_name, context, request=None):
                 node, render_context = _find_template_block(parent_template, block_name, context_instance)
             _NODE_CACHE[cache_key] = node, render_context
 
-    with context_instance.bind_template(template):
         context_instance.render_context = render_context
         return node.render(context_instance)
 
